@@ -42,3 +42,7 @@ Or without building requirements:
 ```console
 run/lint
 ```
+
+## Style
+
+- Prefer to not nest `#include` directives; document expected inclusions instead.

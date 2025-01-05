@@ -3,5 +3,6 @@
     "BasedOnStyle": "Google",
     "AlwaysBreakAfterReturnType": "TopLevelDefinitions",
     "BreakBeforeBraces": "Linux",
-    "IndentWidth": 4
+    "IndentWidth": 4,
+    "SortIncludes": false
 }

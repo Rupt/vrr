@@ -6,6 +6,7 @@
             "clang-analyzer-*",
             "google-*",
             "misc-*",
+            "-misc-include-cleaner",
             "performance-*",
             "portability-*",
             "readability-*",
