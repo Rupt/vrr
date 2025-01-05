@@ -2,7 +2,8 @@
 
 #include "hello.h"
 
-int main() {
+int
+main() {
     int a = 1;
     int b = plus_one(a);
     if (b != a + 1) {
@@ -12,10 +13,6 @@ int main() {
             "\"line\": \"%d\", "
             "\"expected\": \"%d\", "
             "\"observed\": \"%d\"}\n",
-            __FILE__,
-            __LINE__,
-            b,
-            a + 1
-        );
+            __FILE__, __LINE__, b, a + 1);
     }
 }

@@ -1,0 +1,3 @@
+set -eu
+
+clang-format -Werror -i source/*.{c,h}
