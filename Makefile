@@ -1,3 +1,5 @@
+CFLAGS := -Os -std=gnu99 -fwrapv -march=native -pedantic -Wall -Wextra -Werror
+
 .PHONY: default
 default: build/hello.o
 
@@ -10,7 +12,7 @@ lint:
 	run/lint
 
 build/%.o: source/%.c source/%.h build
-	clang -c $< -o $@
+	clang $(CFLAGS) -c $< -o $@
 
 build:
 	mkdir build
