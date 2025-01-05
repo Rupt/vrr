@@ -1,4 +1,4 @@
 set -eu
 
-clang-tidy -fix source/*.h source/*.c -- 2>/dev/null
-clang-format -Werror -i source/*.h source/*.c
+clang-tidy -fix source/* -- 2>/dev/null
+clang-format -Werror -i source/*

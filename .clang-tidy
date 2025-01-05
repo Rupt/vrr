@@ -6,16 +6,12 @@
             "clang-analyzer-*",
             "google-*",
             "misc-*",
-            "-misc-include-cleaner",
             "performance-*",
             "portability-*",
             "readability-*",
             "-readability-identifier-length",
             "-readability-magic-numbers"
         ],
-    "HeaderFileExtensions": ["h"],
-    "HeaderFilterRegex": ".*",
-    "ImplementationFileExtensions": ["c"],
     "UseColor": false,
     "WarningsAsErrors": "*"
 }
