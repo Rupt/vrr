@@ -3,11 +3,11 @@ default: build/hello.o
 
 .PHONY: test
 test: default
-	./test
+	run/test
 
 .PHONY: lint
 lint:
-	./lint
+	run/lint
 
 build/%.o: source/%.c source/%.h build
 	clang -c $< -o $@

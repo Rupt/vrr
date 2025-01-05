@@ -19,14 +19,26 @@ tcc
 make
 ```
 
-### Output test results
+### Run tests
 
 ```console
-./test
+make test
 ```
 
-### Format source files
+Or without building requirements:
 
 ```console
-./lint
+run/test
+```
+
+### Check sources
+
+```console
+make lint
+```
+
+Or without building requirements:
+
+```console
+run/lint
 ```
