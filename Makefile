@@ -1,4 +1,15 @@
-build/hello.o: source/hello.c source/hello.h build
+.PHONY: default
+default: build/hello.o
+
+.PHONY: test
+test: default
+	./test
+
+.PHONY: lint
+lint:
+	./lint
+
+build/%.o: source/%.c source/%.h build
 	clang -c $< -o $@
 
 build:
