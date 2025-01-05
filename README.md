@@ -22,7 +22,7 @@ make
 ### Output test results
 
 ```console
-./check
+./test
 ```
 
 ### Format source files
