@@ -9,7 +9,7 @@ main()
     int a = 1;
     int b = plus_one(/*x=*/a);
     if (b != a + 1) {
-        printf(vrr_expected("%d"), b);
-        printf(vrr_observed("%d"), a + 1);
+        printf(vrr_observed("plus_one(%d) == %d"), a, b);
+        printf(vrr_expected("plus_one(%d) == %d"), a, a + 1);
     }
 }
