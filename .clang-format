@@ -1,6 +1,7 @@
 {
     "Language": "Cpp",
     "BasedOnStyle": "Google",
-    "IndentWidth": 4,
-    "AlwaysBreakAfterReturnType": "TopLevelDefinitions"
+    "AlwaysBreakAfterReturnType": "TopLevelDefinitions",
+    "BreakBeforeBraces": "Linux",
+    "IndentWidth": 4
 }

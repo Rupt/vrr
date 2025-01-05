@@ -3,7 +3,8 @@
 #include "hello.h"
 
 int
-main() {
+main()
+{
     int a = 1;
     int b = plus_one(/*x=*/a);
     if (b != a + 1) {
