@@ -1,4 +1,3 @@
 set -eu
 
-make build/hello.o
 time tcc build/hello.o -run source/test_hello.c
