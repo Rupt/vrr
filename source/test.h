@@ -1,6 +1,6 @@
-#define VRR_UNSAFE_STRING_INNER(b) #b
-#define VRR_UNSAFE_STRING(b) VRR_UNSAFE_STRING_INNER(b)
-#define vrr_unsafe_log(text) __FILE__ ":" VRR_UNSAFE_STRING(__LINE__) ": " text
+#define VRR_UNSAFE_STRINGIFY_INNER(b) #b
+#define VRR_UNSAFE_STRINGIFY(b) VRR_UNSAFE_STRINGIFY_INNER(b)
+#define VRR_UNSAFE_LOG __FILE__ ":" VRR_UNSAFE_STRINGIFY(__LINE__) ": "
 
-#define vrr_expected(format) (vrr_unsafe_log("expected: ") format "\n")
-#define vrr_observed(format) (vrr_unsafe_log("observed: ") format "\n")
+#define vrr_expected(format) (VRR_UNSAFE_LOG "expected: " format "\n")
+#define vrr_observed(format) (VRR_UNSAFE_LOG "observed: " format "\n")
