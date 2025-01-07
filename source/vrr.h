@@ -15,7 +15,7 @@ vrr_u32_from_u8x4_little_endian(struct vrr_u8x4 x)
 }
 
 static inline struct vrr_u8x4
-vrr_bytes_from_u32_little_endian(uint32_t x)
+vrr_u8x4_from_u32_little_endian(uint32_t x)
 {
     return (struct vrr_u8x4){x, x >> 8, x >> 16, x >> 24};
 }

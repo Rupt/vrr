@@ -29,7 +29,7 @@ main(void)
 static void
 test_u32_to_from_u8x4_little_endian(uint32_t const x)
 {
-    struct vrr_u8x4 const bytes = vrr_bytes_from_u32_little_endian(x);
+    struct vrr_u8x4 const bytes = vrr_u8x4_from_u32_little_endian(x);
 
     // Our little-endian bytes form must match a reference implementation.
     struct vrr_u8x4 const ref = {(x >> 0) & 0xff, (x >> 8) & 0xff,
