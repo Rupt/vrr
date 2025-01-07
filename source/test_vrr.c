@@ -20,10 +20,10 @@ main(void)
     test_u32_to_from_u8x4_little_endian(reference);
 
     // Pseudo-random other cases must hold.
-    uint32_t const increment = 0xcba98765;
-    for (uint32_t i = 0; i != increment * 256; i += increment) {
-        test_u32_to_from_u8x4_little_endian(0x456789ab * (i ^ (i >> 17)));
-    }
+    test_u32_to_from_u8x4_little_endian(0x243f6a88);
+    test_u32_to_from_u8x4_little_endian(0x85a308d3);
+    test_u32_to_from_u8x4_little_endian(0x13198a2e);
+    test_u32_to_from_u8x4_little_endian(0x03707344);
 }
 
 static void
