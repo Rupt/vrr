@@ -12,6 +12,7 @@
             "-readability-identifier-length",
             "-readability-magic-numbers"
         ],
+    "ExtraArgs": ["-std=gnu99", "-pedantic", "-Wall", "-Wextra", "-Werror"],
     "UseColor": false,
     "WarningsAsErrors": "*"
 }

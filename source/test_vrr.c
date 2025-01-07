@@ -7,7 +7,7 @@
 static void test_u32_to_from_u8x4_little_endian(uint32_t x);
 
 int
-main()
+main(void)
 {
     // A known case must hold.
     struct vrr_u8x4 const example = {0x0a, 0x1b, 0x2c, 0x3d};
