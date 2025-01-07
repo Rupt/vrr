@@ -1,3 +1,4 @@
 set -eu
 
 tcc build/hello.o -run source/test_hello.c
+tcc -run source/test_vrr.c
