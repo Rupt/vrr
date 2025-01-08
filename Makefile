@@ -1,4 +1,7 @@
-CFLAGS := -Os -std=gnu99 -fwrapv -march=native -pedantic -Wall -Wextra -Werror
+CFLAGS_LANGUAGE := -std=gnu99 -fwrapv -fno-strict-aliasing
+CFLAGS_ERROR := -pedantic -Werror -Wall -Wextra -Wconversion -Walloca
+CFLAGS_COMPILE := -Os -march=native
+CFLAGS := $(CFLAGS_LANGUAGE) $(CFLAGS_ERROR) $(CFLAGS_COMPILE)
 
 .PHONY: test
 test: build/hello.o
