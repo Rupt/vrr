@@ -43,6 +43,11 @@ Or without building requirements:
 run/lint
 ```
 
-## Style
+## Local style
 
-- Prefer to not nest `#include` directives; document expected inclusions instead.
+- Prefer to not nest `#include` directives, because textual inclusion is not a
+  module system and its abuse as a module system incurs costs for compilers.
+  - Instead, document expected includes under `#ifdef VRR_INCLUDE_GUARD` guards in
+    all files that may be included elsewhere.
+  - To ensure only one set of `#include` directives in a build, undefine the guard
+    with `#undef VRR_INCLUDE_GUARD` before your first set of include directives.

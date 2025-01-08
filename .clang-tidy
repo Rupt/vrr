@@ -12,7 +12,15 @@
             "-readability-identifier-length",
             "-readability-magic-numbers"
         ],
-    "ExtraArgs": ["-std=gnu99", "-pedantic", "-Wall", "-Wextra", "-Werror"],
+    "ExtraArgs":
+        [
+            "-std=gnu99",
+            "-pedantic",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-DVRR_INCLUDE_GUARD"
+        ],
     "UseColor": false,
     "WarningsAsErrors": "*"
 }

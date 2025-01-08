@@ -1,5 +1,7 @@
-// <stdint.h>: uint32_t, uint8_t
-#include <stdint.h>  // FIXME: convince clang-tidy to not require this
+#ifdef VRR_INCLUDE_GUARD
+#undef VRR_INCLUDE_GUARD
+#include <stdint.h>  // uint32_t, uint8_t
+#endif
 
 struct vrr_u8x4 {
     uint8_t a;

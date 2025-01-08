@@ -12,7 +12,7 @@ lint:
 	run/lint
 
 build/%.o: source/%.c source/%.h build
-	clang $(CFLAGS) -c $< -o $@
+	clang $(CFLAGS) -DVRR_INCLUDE_GUARD -c $< -o $@
 
 build:
 	mkdir build
