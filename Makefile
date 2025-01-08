@@ -1,10 +1,7 @@
 CFLAGS := -Os -std=gnu99 -fwrapv -march=native -pedantic -Wall -Wextra -Werror
 
-.PHONY: default
-default: build/hello.o
-
 .PHONY: test
-test: default
+test: build/hello.o
 	run/test
 
 .PHONY: lint
