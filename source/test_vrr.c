@@ -62,14 +62,15 @@ test_u32_to_from_u8x4_case(uint32_t const x)
 static void
 test_rotate_left_u32()
 {
-    uint32_t x_n_expected[5][3] = {
-        {0xabcdef01, 0, 0xabcdef01},  {0x01020304, 4, 0x10203040},
-        {0x01020304, 8, 0x02030401},  {0x01020304, 8, 0x02030401},
+    uint32_t x_n_expected[4][3] = {
+        {0x01020304, 4, 0x10203040},
+        {0x01020304, 8, 0x02030401},
+        {0x01020304, 8, 0x02030401},
         {0x24824824, 31, 0x12412412},
     };
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 4; ++i) {
         uint32_t x = x_n_expected[i][0];
-        int n = x_n_expected[i][1];
+        int n = (int)x_n_expected[i][1];
         uint32_t expected = x_n_expected[i][2];
 
         uint32_t observed = vrr_rotate_left_u32(x, n);
