@@ -4,7 +4,7 @@ CFLAGS_COMPILE := -Os -march=native
 CFLAGS := $(CFLAGS_LANGUAGE) $(CFLAGS_STRICT) $(CFLAGS_COMPILE)
 
 .PHONY: test
-test: build/hello.o build/chacha.o
+test: build/chacha.o
 	run/test
 
 .PHONY: lint
