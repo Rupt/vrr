@@ -34,7 +34,6 @@ vrr_u8x4_from_u32(uint32_t x)
 static inline uint32_t
 vrr_rotate_left_u32(uint32_t x, int n)
 {
-    // TODO(rupt): restrict n to 1--31? define modular behaviour?
-    // FIXME(rupt): undefined for n not in 1--31
+    // WARNING: defined only for `1 <= n && n <= 31`.
     return (x << n) | (x >> (32 - n));
 }
