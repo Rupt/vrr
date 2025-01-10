@@ -1,0 +1,3 @@
+set -eu
+
+tcc build/chrono.o -run source/test_chrono.c

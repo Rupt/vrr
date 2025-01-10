@@ -19,28 +19,22 @@ tcc
 make
 ```
 
-### Run tests
-
-```console
-make test
-```
-
-Or without building requirements:
-
-```console
-run/test
-```
-
 ### Check sources
 
 ```console
 make lint
 ```
 
-Or without building requirements:
+### Run tests
 
 ```console
-run/lint
+make test
+```
+
+### Measure timings
+
+```console
+make time
 ```
 
 ## Local style
