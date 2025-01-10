@@ -9,11 +9,12 @@ static inline struct vrr_u32x4x4 vrr_chacha_double_round(struct vrr_u32x4x4 x);
 static inline struct vrr_u32x4 vrr_chacha_quarter_round(uint32_t a, uint32_t b,
                                                         uint32_t c, uint32_t d);
 
+// TODO(rupt): only publicly expose the bytestream api.
 struct vrr_u32x4x4
 vrr_chacha20(struct vrr_u32x4x4 const x)
 {
     struct vrr_u32x4x4 v = x;
-    for (int i = 0; i < 20; i += 2) {
+    for (int i = 0; i < 10; ++i) {
         v = vrr_chacha_double_round(v);
     }
     return (struct vrr_u32x4x4){

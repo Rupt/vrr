@@ -11,10 +11,11 @@ test: build/hello.o build/chacha.o
 lint:
 	run/lint
 
-build/%.o: source/%.c source/%.h build
+build/%.o: source/%.c source/%.h build/.vrr
 	clang $(CFLAGS) -DVRR_INCLUDE_GUARD -c $< -o $@
 
-build:
-	mkdir build
+build/.vrr:
+	mkdir -p build
+	touch $@
 
 .SUFFIXES:  # disables implicit rules; see https://www.gnu.org/software/make/manual/html_node/Suffix-Rules.html
