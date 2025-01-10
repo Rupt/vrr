@@ -4,7 +4,7 @@
 #include "test.h"
 
 int
-main(void)
+main()
 {
     int a = 1;
     int b = plus_one(/*x=*/a);
