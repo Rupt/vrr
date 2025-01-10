@@ -4,10 +4,10 @@
 #endif
 
 struct vrr_u32x4x4 {
-    uint32_t aa, ab, ac, ad;
-    uint32_t ba, bb, bc, bd;
-    uint32_t ca, cb, cc, cd;
-    uint32_t da, db, dc, dd;
+    uint32_t aa, ba, ca, da;
+    uint32_t ab, bb, cb, db;
+    uint32_t ac, bc, cc, dc;
+    uint32_t ad, bd, cd, dd;
 };
 
 struct vrr_u32x4 {
