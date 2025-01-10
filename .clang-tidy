@@ -14,11 +14,17 @@
         ],
     "ExtraArgs":
         [
-            "-std=gnu99",
+            "-std=gnu23",
             "-pedantic",
+            "-Werror",
             "-Wall",
             "-Wextra",
-            "-Werror",
+            "-Wconversion",
+            "-Walloca",
+            "-Wshadow",
+            "-Wundef",
+            "-Wwrite-strings",
+            "-Wvla",
             "-DVRR_INCLUDE_GUARD"
         ],
     "UseColor": false,
