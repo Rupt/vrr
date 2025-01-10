@@ -26,28 +26,36 @@ vrr_chacha20(struct vrr_u32x4x4 const x)
 }
 
 static inline struct vrr_u32x4x4
-vrr_chacha_double_round(struct vrr_u32x4x4 x)
+vrr_chacha_double_round(struct vrr_u32x4x4 const x)
 {
-    struct vrr_u32x4 tmp;
     // Even rounds go down columns.
-    tmp = vrr_chacha_quarter_round(x.aa, x.ba, x.ca, x.da);
-    x.aa = tmp.a, x.ba = tmp.b, x.ca = tmp.c, x.da = tmp.d;
-    tmp = vrr_chacha_quarter_round(x.ab, x.bb, x.cb, x.db);
-    x.ab = tmp.a, x.bb = tmp.b, x.cb = tmp.c, x.db = tmp.d;
-    tmp = vrr_chacha_quarter_round(x.ac, x.bc, x.cc, x.dc);
-    x.ac = tmp.a, x.bc = tmp.b, x.cc = tmp.c, x.dc = tmp.d;
-    tmp = vrr_chacha_quarter_round(x.ad, x.bd, x.cd, x.dd);
-    x.ad = tmp.a, x.bd = tmp.b, x.cd = tmp.c, x.dd = tmp.d;
+    struct vrr_u32x4 ta = vrr_chacha_quarter_round(x.aa, x.ba, x.ca, x.da);
+    struct vrr_u32x4 tb = vrr_chacha_quarter_round(x.ab, x.bb, x.cb, x.db);
+    struct vrr_u32x4 tc = vrr_chacha_quarter_round(x.ac, x.bc, x.cc, x.dc);
+    struct vrr_u32x4 td = vrr_chacha_quarter_round(x.ad, x.bd, x.cd, x.dd);
     // Odd rounds go down diagonals.
-    tmp = vrr_chacha_quarter_round(x.aa, x.bb, x.cc, x.dd);
-    x.aa = tmp.a, x.bb = tmp.b, x.cc = tmp.c, x.dd = tmp.d;
-    tmp = vrr_chacha_quarter_round(x.ab, x.bc, x.cd, x.da);
-    x.ab = tmp.a, x.bc = tmp.b, x.cd = tmp.c, x.da = tmp.d;
-    tmp = vrr_chacha_quarter_round(x.ac, x.bd, x.ca, x.db);
-    x.ac = tmp.a, x.bd = tmp.b, x.ca = tmp.c, x.db = tmp.d;
-    tmp = vrr_chacha_quarter_round(x.ad, x.ba, x.cb, x.dc);
-    x.ad = tmp.a, x.ba = tmp.b, x.cb = tmp.c, x.dc = tmp.d;
-    return x;
+    struct vrr_u32x4 t5 = vrr_chacha_quarter_round(ta.a, tb.b, tc.c, td.d);
+    struct vrr_u32x4 t6 = vrr_chacha_quarter_round(tb.a, tc.b, td.c, ta.d);
+    struct vrr_u32x4 t7 = vrr_chacha_quarter_round(tc.a, td.b, ta.c, tb.d);
+    struct vrr_u32x4 t8 = vrr_chacha_quarter_round(td.a, ta.b, tb.c, tc.d);
+    return (struct vrr_u32x4x4){
+        .aa = t5.a,
+        .bb = t5.b,
+        .cc = t5.c,
+        .dd = t5.d,
+        .ab = t6.a,
+        .bc = t6.b,
+        .cd = t6.c,
+        .da = t6.d,
+        .ac = t7.a,
+        .bd = t7.b,
+        .ca = t7.c,
+        .db = t7.d,
+        .ad = t8.a,
+        .ba = t8.b,
+        .cb = t8.c,
+        .dc = t8.d,
+    };
 }
 
 static inline struct vrr_u32x4
