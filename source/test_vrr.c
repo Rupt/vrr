@@ -4,19 +4,19 @@
 #include "test.h"
 #include "vrr.h"
 
-static void test_u32_to_from_u8x4();
+static void test_u32_to_from_u8x4(void);
 static void test_u32_to_from_u8x4_case(uint32_t x);
-static void test_rotate_left_u32();
+static void test_rotate_left_u32(void);
 
 int
-main()
+main(void)
 {
     test_u32_to_from_u8x4();
     test_rotate_left_u32();
 }
 
 static void
-test_u32_to_from_u8x4()
+test_u32_to_from_u8x4(void)
 {
     // A known case must hold.
     struct vrr_u8x4 const example = {0x0a, 0x1b, 0x2c, 0x3d};
@@ -60,7 +60,7 @@ test_u32_to_from_u8x4_case(uint32_t const x)
 }
 
 static void
-test_rotate_left_u32()
+test_rotate_left_u32(void)
 {
     uint32_t x_n_expected[4][3] = {
         {0x01020304, 4, 0x10203040},

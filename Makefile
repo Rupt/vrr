@@ -1,4 +1,4 @@
-CFLAGS_LANGUAGE := -std=gnu23 -fwrapv -fno-strict-aliasing
+CFLAGS_LANGUAGE := -std=gnu99 -fwrapv -fno-strict-aliasing
 CFLAGS_STRICT := -pedantic -Werror -Wall -Wextra -Wconversion -Walloca -Wshadow -Wundef -Wwrite-strings -Wvla
 CFLAGS_COMPILE := -Os -march=native
 CFLAGS := $(CFLAGS_LANGUAGE) $(CFLAGS_STRICT) $(CFLAGS_COMPILE)

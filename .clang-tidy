@@ -14,7 +14,7 @@
         ],
     "ExtraArgs":
         [
-            "-std=gnu23",
+            "-std=gnu99",
             "-pedantic",
             "-Werror",
             "-Wall",

@@ -6,7 +6,7 @@
 #include "chacha.h"
 
 int
-main()
+main(void)
 {
     // It must match https://datatracker.ietf.org/doc/html/rfc7539 page 9.
     struct vrr_u32x4x4 const x = {
