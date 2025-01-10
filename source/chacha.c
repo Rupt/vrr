@@ -28,40 +28,25 @@ vrr_chacha20(struct vrr_u32x4x4 const x)
 static inline struct vrr_u32x4x4
 vrr_chacha_double_round(struct vrr_u32x4x4 x)
 {
-    // Even rounds go up columns.
-    {
-        struct vrr_u32x4 tmp = vrr_chacha_quarter_round(x.aa, x.ba, x.ca, x.da);
-        x.aa = tmp.a, x.ba = tmp.b, x.ca = tmp.c, x.da = tmp.d;
-    }
-    {
-        struct vrr_u32x4 tmp = vrr_chacha_quarter_round(x.ab, x.bb, x.cb, x.db);
-        x.ab = tmp.a, x.bb = tmp.b, x.cb = tmp.c, x.db = tmp.d;
-    }
-    {
-        struct vrr_u32x4 tmp = vrr_chacha_quarter_round(x.ac, x.bc, x.cc, x.dc);
-        x.ac = tmp.a, x.bc = tmp.b, x.cc = tmp.c, x.dc = tmp.d;
-    }
-    {
-        struct vrr_u32x4 tmp = vrr_chacha_quarter_round(x.ad, x.bd, x.cd, x.dd);
-        x.ad = tmp.a, x.bd = tmp.b, x.cd = tmp.c, x.dd = tmp.d;
-    }
-    // Odd rounds go up diagonals.
-    {
-        struct vrr_u32x4 tmp = vrr_chacha_quarter_round(x.aa, x.bb, x.cc, x.dd);
-        x.aa = tmp.a, x.bb = tmp.b, x.cc = tmp.c, x.dd = tmp.d;
-    }
-    {
-        struct vrr_u32x4 tmp = vrr_chacha_quarter_round(x.ab, x.bc, x.cd, x.da);
-        x.ab = tmp.a, x.bc = tmp.b, x.cd = tmp.c, x.da = tmp.d;
-    }
-    {
-        struct vrr_u32x4 tmp = vrr_chacha_quarter_round(x.ac, x.bd, x.ca, x.db);
-        x.ac = tmp.a, x.bd = tmp.b, x.ca = tmp.c, x.db = tmp.d;
-    }
-    {
-        struct vrr_u32x4 tmp = vrr_chacha_quarter_round(x.ad, x.ba, x.cb, x.dc);
-        x.ad = tmp.a, x.ba = tmp.b, x.cb = tmp.c, x.dc = tmp.d;
-    }
+    struct vrr_u32x4 tmp;
+    // Even rounds go down columns.
+    tmp = vrr_chacha_quarter_round(x.aa, x.ba, x.ca, x.da);
+    x.aa = tmp.a, x.ba = tmp.b, x.ca = tmp.c, x.da = tmp.d;
+    tmp = vrr_chacha_quarter_round(x.ab, x.bb, x.cb, x.db);
+    x.ab = tmp.a, x.bb = tmp.b, x.cb = tmp.c, x.db = tmp.d;
+    tmp = vrr_chacha_quarter_round(x.ac, x.bc, x.cc, x.dc);
+    x.ac = tmp.a, x.bc = tmp.b, x.cc = tmp.c, x.dc = tmp.d;
+    tmp = vrr_chacha_quarter_round(x.ad, x.bd, x.cd, x.dd);
+    x.ad = tmp.a, x.bd = tmp.b, x.cd = tmp.c, x.dd = tmp.d;
+    // Odd rounds go down diagonals.
+    tmp = vrr_chacha_quarter_round(x.aa, x.bb, x.cc, x.dd);
+    x.aa = tmp.a, x.bb = tmp.b, x.cc = tmp.c, x.dd = tmp.d;
+    tmp = vrr_chacha_quarter_round(x.ab, x.bc, x.cd, x.da);
+    x.ab = tmp.a, x.bc = tmp.b, x.cd = tmp.c, x.da = tmp.d;
+    tmp = vrr_chacha_quarter_round(x.ac, x.bd, x.ca, x.db);
+    x.ac = tmp.a, x.bd = tmp.b, x.ca = tmp.c, x.db = tmp.d;
+    tmp = vrr_chacha_quarter_round(x.ad, x.ba, x.cb, x.dc);
+    x.ad = tmp.a, x.ba = tmp.b, x.cb = tmp.c, x.dc = tmp.d;
     return x;
 }
 
