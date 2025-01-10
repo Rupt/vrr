@@ -28,20 +28,21 @@ vrr_chacha20(struct vrr_u32x4x4 const x)
 static inline struct vrr_u32x4x4
 vrr_chacha_double_round(struct vrr_u32x4x4 const x)
 {
-    // TODO(rupt): tidy names
     // Even rounds go down columns.
-    struct vrr_u32x4 ta = vrr_chacha_quarter_round(x.aa, x.ab, x.ac, x.ad);
-    struct vrr_u32x4 tb = vrr_chacha_quarter_round(x.ba, x.bb, x.bc, x.bd);
-    struct vrr_u32x4 tc = vrr_chacha_quarter_round(x.ca, x.cb, x.cc, x.cd);
-    struct vrr_u32x4 td = vrr_chacha_quarter_round(x.da, x.db, x.dc, x.dd);
+    struct vrr_u32x4 const a = vrr_chacha_quarter_round(x.aa, x.ab, x.ac, x.ad);
+    struct vrr_u32x4 const b = vrr_chacha_quarter_round(x.ba, x.bb, x.bc, x.bd);
+    struct vrr_u32x4 const c = vrr_chacha_quarter_round(x.ca, x.cb, x.cc, x.cd);
+    struct vrr_u32x4 const d = vrr_chacha_quarter_round(x.da, x.db, x.dc, x.dd);
     // Odd rounds go down diagonals.
-    struct vrr_u32x4 t5 = vrr_chacha_quarter_round(ta.a, tb.b, tc.c, td.d);
-    struct vrr_u32x4 t6 = vrr_chacha_quarter_round(tb.a, tc.b, td.c, ta.d);
-    struct vrr_u32x4 t7 = vrr_chacha_quarter_round(tc.a, td.b, ta.c, tb.d);
-    struct vrr_u32x4 t8 = vrr_chacha_quarter_round(td.a, ta.b, tb.c, tc.d);
+    struct vrr_u32x4 const va = vrr_chacha_quarter_round(a.a, b.b, c.c, d.d);
+    struct vrr_u32x4 const vb = vrr_chacha_quarter_round(b.a, c.b, d.c, a.d);
+    struct vrr_u32x4 const vc = vrr_chacha_quarter_round(c.a, d.b, a.c, b.d);
+    struct vrr_u32x4 const vd = vrr_chacha_quarter_round(d.a, a.b, b.c, c.d);
     return (struct vrr_u32x4x4){
-        t5.a, t6.a, t7.a, t8.a, t8.b, t5.b, t6.b, t7.b,
-        t7.c, t8.c, t5.c, t6.c, t6.d, t7.d, t8.d, t5.d,
+        va.a, vb.a, vc.a, vd.a,  // first row
+        vd.b, va.b, vb.b, vc.b,  // second row
+        vc.c, vd.c, va.c, vb.c,  // third row
+        vb.d, vc.d, vd.d, va.d,
     };
 }
 
