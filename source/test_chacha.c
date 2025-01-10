@@ -23,20 +23,20 @@ main(void)
     };
     struct vrr_u32x4x4 const s = vrr_chacha20(x);
 
-    if (s.aa != y.aa || s.ab != y.ab || s.ac != y.ac || s.ad != y.ad) {
-        printf(vrr_observed("%08x %08x %08x %08x"), s.aa, s.ab, s.ac, s.ad);
-        printf(vrr_expected("%08x %08x %08x %08x"), y.aa, y.ab, y.ac, y.ad);
+    if (s.aa != y.aa || s.ba != y.ba || s.ca != y.ca || s.da != y.da) {
+        printf(vrr_observed("%08x %08x %08x %08x"), s.aa, s.ba, s.ca, s.da);
+        printf(vrr_expected("%08x %08x %08x %08x"), y.aa, y.ba, y.ca, y.da);
     }
-    if (s.ba != y.ba || s.bb != y.bb || s.bc != y.bc || s.bd != y.bd) {
-        printf(vrr_observed("%08x %08x %08x %08x"), s.ba, s.bb, s.bc, s.bd);
-        printf(vrr_expected("%08x %08x %08x %08x"), y.ba, y.bb, y.bc, y.bd);
+    if (s.ab != y.ab || s.bb != y.bb || s.cb != y.cb || s.db != y.db) {
+        printf(vrr_observed("%08x %08x %08x %08x"), s.ab, s.bb, s.cb, s.db);
+        printf(vrr_expected("%08x %08x %08x %08x"), y.ab, y.bb, y.cb, y.db);
     }
-    if (s.ca != y.ca || s.cb != y.cb || s.cc != y.cc || s.cd != y.cd) {
-        printf(vrr_observed("%08x %08x %08x %08x"), s.ca, s.cb, s.cc, s.cd);
-        printf(vrr_expected("%08x %08x %08x %08x"), y.ca, y.cb, y.cc, y.cd);
+    if (s.ac != y.ac || s.bc != y.bc || s.cc != y.cc || s.dc != y.dc) {
+        printf(vrr_observed("%08x %08x %08x %08x"), s.ac, s.bc, s.cc, s.dc);
+        printf(vrr_expected("%08x %08x %08x %08x"), y.ac, y.bc, y.cc, y.dc);
     }
-    if (s.da != y.da || s.db != y.db || s.dc != y.dc || s.dd != y.dd) {
-        printf(vrr_observed("%08x %08x %08x %08x"), s.da, s.db, s.dc, s.dd);
-        printf(vrr_expected("%08x %08x %08x %08x"), y.da, y.db, y.dc, y.dd);
+    if (s.ad != y.ad || s.bd != y.bd || s.cd != y.cd || s.dd != y.dd) {
+        printf(vrr_observed("%08x %08x %08x %08x"), s.ad, s.bd, s.cd, s.dd);
+        printf(vrr_expected("%08x %08x %08x %08x"), y.ad, y.bd, y.cd, y.dd);
     }
 }
