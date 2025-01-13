@@ -7,7 +7,7 @@
 void vrr_chacha_stream(
     // TODO(rupt): use key and nonce structures
     // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
-    uint8_t const key[static 32], uint8_t const nonce[static 8],
-    unsigned long long n, uint8_t out[static n]);
+    uint8_t const key[static 32], uint8_t const nonce[static 12],
+    unsigned long long n, uint8_t *out);
 
 struct vrr_u32x4x4 vrr_chacha20(struct vrr_u32x4x4 x);
