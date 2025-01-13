@@ -17,6 +17,7 @@ vrr_chacha_stream(
     uint8_t const key[static const 32], uint8_t const nonce[static const 12],
     unsigned long long const n, uint8_t *out)
 {
+    // TODO(rupt): avoid mutating state
     struct vrr_u32x4x4 state = {
         // first row: constant
         0x61707865,
@@ -36,6 +37,7 @@ vrr_chacha_stream(
         // fourth row: nonce | counter
         vrr_u32(nonce[0], nonce[1], nonce[2], nonce[3]),
         vrr_u32(nonce[4], nonce[5], nonce[6], nonce[7]),
+        // TODO(rupt): 64-bit counter (diverge from the RFC)
         vrr_u32(nonce[8], nonce[9], nonce[10], nonce[11]),
         0x00000000,
     };
@@ -43,28 +45,20 @@ vrr_chacha_stream(
         // TODO(rupt): a function to assign the counter?
         state.dd = (uint32_t)i;
         struct vrr_u32x4x4 v = vrr_chacha20(state);
-        // TODO(rupt): a function for extracting bytes in the right order
-        vrr_u32_to_bytes(v.aa, &out[64 * i + 4L * 0]);
-        vrr_u32_to_bytes(v.ba, &out[64 * i + 4L * 1]);
-        vrr_u32_to_bytes(v.ca, &out[64 * i + 4L * 2]);
-        vrr_u32_to_bytes(v.da, &out[64 * i + 4L * 3]);
-
-        vrr_u32_to_bytes(v.ab, &out[64 * i + 4L * 4]);
-        vrr_u32_to_bytes(v.bb, &out[64 * i + 4L * 5]);
-        vrr_u32_to_bytes(v.cb, &out[64 * i + 4L * 6]);
-        vrr_u32_to_bytes(v.db, &out[64 * i + 4L * 7]);
-
-        vrr_u32_to_bytes(v.ac, &out[64 * i + 4L * 8]);
-        vrr_u32_to_bytes(v.bc, &out[64 * i + 4L * 9]);
-        vrr_u32_to_bytes(v.cc, &out[64 * i + 4L * 10]);
-        vrr_u32_to_bytes(v.dc, &out[64 * i + 4L * 11]);
-
-        vrr_u32_to_bytes(v.ad, &out[64 * i + 4L * 12]);
-        vrr_u32_to_bytes(v.bd, &out[64 * i + 4L * 13]);
-        vrr_u32_to_bytes(v.cd, &out[64 * i + 4L * 14]);
-        vrr_u32_to_bytes(v.dd, &out[64 * i + 4L * 15]);
+        vrr_u32x4x4_to_bytes(v, &out[64 * i]);
     }
     // TODO(rupt): support n not divisible by 64
+    unsigned long remainder = n % 64;
+    if (remainder == 0) {
+        return;
+    }
+    state.dd = (uint32_t)(n / 64);
+    uint8_t tmp[64];
+    struct vrr_u32x4x4 v = vrr_chacha20(state);
+    vrr_u32x4x4_to_bytes(v, tmp);
+    for (unsigned long i = 0; i < remainder; ++i) {
+        out[n / 64 * 64 + i] = tmp[i];
+    }
 }
 
 struct vrr_u32x4x4

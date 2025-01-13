@@ -32,6 +32,7 @@ main(void)
     uint8_t stream[64];
     vrr_chacha_stream(key, nonce, 64, stream);
 
+    // TODO(rupt): function for u32x4x4 from bytes
     struct vrr_u32x4x4 const s = {
         vrr_u32(stream[0], stream[1], stream[2], stream[3]),
         vrr_u32(stream[4], stream[5], stream[6], stream[7]),
@@ -67,4 +68,6 @@ main(void)
         printf(vrr_observed("%08x %08x %08x %08x"), s.ad, s.bd, s.cd, s.dd);
         printf(vrr_expected("%08x %08x %08x %08x"), y.ad, y.bd, y.cd, y.dd);
     }
+
+    // TODO(rupt): test non-multiples of 64
 }
