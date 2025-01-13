@@ -9,6 +9,7 @@
             "performance-*",
             "portability-*",
             "readability-*",
+            "-misc-include-cleaner",
             "-readability-identifier-length",
             "-readability-magic-numbers"
         ],
