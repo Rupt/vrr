@@ -24,17 +24,27 @@ vrr_u32_from_u8x4(struct vrr_u8x4 const x)
     return x.a | (uint32_t)x.b << 8 | (uint32_t)x.c << 16 | (uint32_t)x.d << 24;
 }
 
+static inline struct vrr_u8x4
+vrr_u8x4_from_u32(uint32_t const x)
+{
+    return (struct vrr_u8x4){(uint8_t)x, (uint8_t)(x >> 8), (uint8_t)(x >> 16),
+                             (uint8_t)(x >> 24)};
+}
+
 static inline uint32_t
 vrr_u32(uint8_t const a, uint8_t const b, uint8_t const c, uint8_t const d)
 {
     return vrr_u32_from_u8x4((struct vrr_u8x4){a, b, c, d});
 }
 
-static inline struct vrr_u8x4
-vrr_u8x4_from_u32(uint32_t const x)
+static inline void
+vrr_u32_to_bytes(uint32_t const x, uint8_t out[static const 4])
 {
-    return (struct vrr_u8x4){(uint8_t)x, (uint8_t)(x >> 8), (uint8_t)(x >> 16),
-                             (uint8_t)(x >> 24)};
+    struct vrr_u8x4 split = vrr_u8x4_from_u32(x);
+    out[0] = split.a;
+    out[1] = split.b;
+    out[2] = split.c;
+    out[3] = split.d;
 }
 
 static inline uint32_t

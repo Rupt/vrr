@@ -22,19 +22,11 @@ main(void)
 
     uint8_t key[32];
     for (int i = 0; i < 8; ++i) {
-        struct vrr_u8x4 k = vrr_u8x4_from_u32(key32[i]);
-        key[4 * i + 0] = k.a;
-        key[4 * i + 1] = k.b;
-        key[4 * i + 2] = k.c;
-        key[4 * i + 3] = k.d;
+        vrr_u32_to_bytes(key32[i], &key[4LL * i]);
     }
     uint8_t nonce[12];
     for (int i = 0; i < 3; ++i) {
-        struct vrr_u8x4 k = vrr_u8x4_from_u32(nonce32[i]);
-        nonce[4 * i + 0] = k.a;
-        nonce[4 * i + 1] = k.b;
-        nonce[4 * i + 2] = k.c;
-        nonce[4 * i + 3] = k.d;
+        vrr_u32_to_bytes(nonce32[i], &nonce[4LL * i]);
     }
 
     uint8_t stream[64];
