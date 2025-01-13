@@ -25,7 +25,6 @@
             "-Wshadow",
             "-Wundef",
             "-Wwrite-strings",
-            "-Wvla",
             "-DVRR_INCLUDE_GUARD"
         ],
     "UseColor": false,

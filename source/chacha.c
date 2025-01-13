@@ -15,8 +15,7 @@ vrr_chacha_stream(
     // TODO(rupt): use key and nonce structures
     // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
     uint8_t const key[static const 32], uint8_t const nonce[static const 8],
-    // NOLINTNEXTLINE(clang-diagnostic-vla) (clang mistakes this for VLA)
-    unsigned long long const n, uint8_t *out)
+    unsigned long long const n, uint8_t out[static const n])
 {
     struct vrr_u32x4x4 state = {
         // first row: constant
