@@ -33,6 +33,14 @@ test_u32_to_from_u8x4(void)
     test_u32_to_from_u8x4_case(0x85a308d3);
     test_u32_to_from_u8x4_case(0x13198a2e);
     test_u32_to_from_u8x4_case(0x03707344);
+
+    // Structured and destructured forms must match.
+    uint32_t const check_destructured =
+        vrr_u32(example.a, example.b, example.c, example.d);
+    if (check_destructured != reference) {
+        printf(vrr_observed("0x%08x"), check_destructured);
+        printf(vrr_expected("0x%08x"), reference);
+    }
 }
 
 static void
