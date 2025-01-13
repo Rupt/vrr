@@ -47,7 +47,7 @@ vrr_chacha_stream(
         struct vrr_u32x4x4 v = vrr_chacha20(state);
         vrr_u32x4x4_to_bytes(v, &out[64 * i]);
     }
-    // TODO(rupt): support n not divisible by 64
+    // TODO(rupt): condense this? Move to branch within the main loop?
     unsigned long remainder = n % 64;
     if (remainder == 0) {
         return;
