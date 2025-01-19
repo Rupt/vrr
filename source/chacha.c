@@ -37,12 +37,12 @@ vrr_chacha_stream(
         // fourth row: nonce | counter
         vrr_u32(nonce[0], nonce[1], nonce[2], nonce[3]),
         vrr_u32(nonce[4], nonce[5], nonce[6], nonce[7]),
-        // TODO(rupt): 64-bit counter (diverge from the RFC)
-        vrr_u32(nonce[8], nonce[9], nonce[10], nonce[11]),
+        0x00000000,
         0x00000000,
     };
-    for (unsigned long i = 0; i < n / 64; ++i) {
+    for (uint64_t i = 0; i < n / 64; ++i) {
         // TODO(rupt): a function to assign the counter?
+        state.cd = (uint32_t)(i >> 32);
         state.dd = (uint32_t)i;
         struct vrr_u32x4x4 v = vrr_chacha20(state);
         vrr_u32x4x4_to_bytes(v, &out[64 * i]);

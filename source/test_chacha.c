@@ -22,7 +22,7 @@ main(void)
         0x1c, 0xc3, 0x87, 0xb6, 0x69, 0xb2, 0xee, 0x65, 0x86};
 
     uint8_t key[32] = {};
-    uint8_t nonce[12] = {};
+    uint8_t nonce[8] = {};
 
     uint8_t stream[64];
     vrr_chacha_stream(key, nonce, 64, stream);
