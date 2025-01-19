@@ -35,15 +35,15 @@ vrr_chacha_stream(
         vrr_u32(key[24], key[25], key[26], key[27]),
         vrr_u32(key[28], key[29], key[30], key[31]),
         // fourth row: nonce | counter
+        0x00000000,
+        0x00000000,
         vrr_u32(nonce[0], nonce[1], nonce[2], nonce[3]),
         vrr_u32(nonce[4], nonce[5], nonce[6], nonce[7]),
-        0x00000000,
-        0x00000000,
     };
     for (uint64_t i = 0; i < n / 64; ++i) {
         // TODO(rupt): a function to assign the counter?
-        state.cd = (uint32_t)(i >> 32);
-        state.dd = (uint32_t)i;
+        state.ad = (uint32_t)i;
+        state.bd = (uint32_t)(i >> 32);
         struct vrr_u32x4x4 v = vrr_chacha20(state);
         vrr_u32x4x4_to_bytes(v, &out[64 * i]);
     }
