@@ -14,7 +14,7 @@ void
 vrr_chacha_stream(
     // TODO(rupt): use key and nonce structures
     // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
-    uint8_t const key[static const 32], uint8_t const nonce[static const 12],
+    uint8_t const key[static const 32], uint8_t const nonce[static const 8],
     unsigned long long const n, uint8_t *out)
 {
     // TODO(rupt): avoid mutating state
