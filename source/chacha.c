@@ -4,35 +4,110 @@
 #include "chacha.h"
 #endif
 
-struct u32x4 {
-    uint32_t a, b, c, d;
-};
-
 struct u8x4 {
     uint8_t a, b, c, d;
+};
+
+struct u32x4 {
+    uint32_t a, b, c, d;
 };
 
 struct u32x4x4 {
     struct u32x4 a, b, c, d;
 };
 
-static inline struct u32x4x4 chacha20(struct u32x4x4 x);
-static inline struct u32x4x4 chacha_double(struct u32x4x4 x);
-static inline struct u32x4 chacha_quarter(uint32_t a, uint32_t b, uint32_t c,
-                                          uint32_t d);
+// Rotation is only defined for positive `n` less than the bit size.
+static inline uint32_t
+rotate_left_u32(uint32_t const x, int const n)
+{
+    return (x << n) | (x >> (32 - n));
+}
 
-static inline uint32_t rotate_left_u32(uint32_t x, int n);
+static inline uint32_t
+u32_from_u8(uint8_t const a, uint8_t const b, uint8_t const c, uint8_t const d)
+{
+    return a | (uint32_t)b << 8 | (uint32_t)c << 16 | (uint32_t)d << 24;
+}
 
-static inline uint32_t u32_from_u8(uint8_t a, uint8_t b, uint8_t c, uint8_t d);
+static inline void
+u32_to_bytes(uint32_t const x, uint8_t out[static const 4])
+{
+    out[0] = (uint8_t)x;
+    out[1] = (uint8_t)(x >> 8);
+    out[2] = (uint8_t)(x >> 16);
+    out[3] = (uint8_t)(x >> 24);
+}
 
-static inline void u32x4x4_to_bytes(struct u32x4x4 x,
-                                    uint8_t out[static const 64]);
-static inline void u32_to_bytes(uint32_t x, uint8_t out[static const 4]);
+static inline void
+u32x4_to_bytes(struct u32x4 const x, uint8_t out[static const 16])
+{
+    u32_to_bytes(x.a, &out[0]);
+    u32_to_bytes(x.b, &out[4]);
+    u32_to_bytes(x.c, &out[8]);
+    u32_to_bytes(x.d, &out[12]);
+}
 
-static inline void u32x4_to_bytes(struct u32x4 x, uint8_t out[static const 16]);
+static inline void
+u32x4x4_to_bytes(struct u32x4x4 const x, uint8_t out[static const 64])
+{
+    u32x4_to_bytes(x.a, &out[0]);
+    u32x4_to_bytes(x.b, &out[16]);
+    u32x4_to_bytes(x.c, &out[32]);
+    u32x4_to_bytes(x.d, &out[48]);
+}
+
+static inline struct u32x4
+chacha_quarter(uint32_t a, uint32_t b, uint32_t c, uint32_t d)
+{
+    a += b;
+    d = rotate_left_u32(d ^ a, 16);
+    c += d;
+    b = rotate_left_u32(b ^ c, 12);
+    a += b;
+    d = rotate_left_u32(d ^ a, 8);
+    c += d;
+    b = rotate_left_u32(b ^ c, 7);
+    return (struct u32x4){a, b, c, d};
+}
+
+static inline struct u32x4x4
+chacha_double(struct u32x4x4 const x)
+{
+    // Even rounds go down columns.
+    struct u32x4 const a = chacha_quarter(x.a.a, x.b.a, x.c.a, x.d.a);
+    struct u32x4 const b = chacha_quarter(x.a.b, x.b.b, x.c.b, x.d.b);
+    struct u32x4 const c = chacha_quarter(x.a.c, x.b.c, x.c.c, x.d.c);
+    struct u32x4 const d = chacha_quarter(x.a.d, x.b.d, x.c.d, x.d.d);
+    // Odd rounds go down diagonals.
+    struct u32x4 const v1 = chacha_quarter(a.a, b.b, c.c, d.d);
+    struct u32x4 const v2 = chacha_quarter(b.a, c.b, d.c, a.d);
+    struct u32x4 const v3 = chacha_quarter(c.a, d.b, a.c, b.d);
+    struct u32x4 const v4 = chacha_quarter(d.a, a.b, b.c, c.d);
+    return (struct u32x4x4){
+        {v1.a, v2.a, v3.a, v4.a},  // format first row
+        {v4.b, v1.b, v2.b, v3.b},  // format second row
+        {v3.c, v4.c, v1.c, v2.c},  // format third row
+        {v2.d, v3.d, v4.d, v1.d},
+    };
+}
+
+static inline struct u32x4x4
+chacha20(struct u32x4x4 const x)
+{
+    struct u32x4x4 v = x;
+    for (int i = 0; i < 10; ++i) {
+        v = chacha_double(v);
+    }
+    return (struct u32x4x4){
+        {x.a.a + v.a.a, x.a.b + v.a.b, x.a.c + v.a.c, x.a.d + v.a.d},
+        {x.b.a + v.b.a, x.b.b + v.b.b, x.b.c + v.b.c, x.b.d + v.b.d},
+        {x.c.a + v.c.a, x.c.b + v.c.b, x.c.c + v.c.c, x.c.d + v.c.d},
+        {x.d.a + v.d.a, x.d.b + v.d.b, x.d.c + v.d.c, x.d.d + v.d.d},
+    };
+}
 
 void
-chacha_stream(
+vrr_chacha_stream(
     // TODO(rupt): use key and nonce structures
     // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
     uint8_t const key[static const 32], uint8_t const nonce[static const 8],
@@ -76,94 +151,4 @@ chacha_stream(
     for (unsigned long i = 0; i < remainder; ++i) {
         out[n / 64 * 64 + i] = tmp[i];
     }
-}
-
-static inline struct u32x4x4
-chacha20(struct u32x4x4 const x)
-{
-    struct u32x4x4 v = x;
-    for (int i = 0; i < 10; ++i) {
-        v = chacha_double(v);
-    }
-    return (struct u32x4x4){
-        {x.a.a + v.a.a, x.a.b + v.a.b, x.a.c + v.a.c, x.a.d + v.a.d},
-        {x.b.a + v.b.a, x.b.b + v.b.b, x.b.c + v.b.c, x.b.d + v.b.d},
-        {x.c.a + v.c.a, x.c.b + v.c.b, x.c.c + v.c.c, x.c.d + v.c.d},
-        {x.d.a + v.d.a, x.d.b + v.d.b, x.d.c + v.d.c, x.d.d + v.d.d},
-    };
-}
-
-static inline struct u32x4x4
-chacha_double(struct u32x4x4 const x)
-{
-    // Even rounds go down columns.
-    struct u32x4 const a = chacha_quarter(x.a.a, x.b.a, x.c.a, x.d.a);
-    struct u32x4 const b = chacha_quarter(x.a.b, x.b.b, x.c.b, x.d.b);
-    struct u32x4 const c = chacha_quarter(x.a.c, x.b.c, x.c.c, x.d.c);
-    struct u32x4 const d = chacha_quarter(x.a.d, x.b.d, x.c.d, x.d.d);
-    // Odd rounds go down diagonals.
-    struct u32x4 const v1 = chacha_quarter(a.a, b.b, c.c, d.d);
-    struct u32x4 const v2 = chacha_quarter(b.a, c.b, d.c, a.d);
-    struct u32x4 const v3 = chacha_quarter(c.a, d.b, a.c, b.d);
-    struct u32x4 const v4 = chacha_quarter(d.a, a.b, b.c, c.d);
-    return (struct u32x4x4){
-        {v1.a, v2.a, v3.a, v4.a},  // format first row
-        {v4.b, v1.b, v2.b, v3.b},  // format second row
-        {v3.c, v4.c, v1.c, v2.c},  // format third row
-        {v2.d, v3.d, v4.d, v1.d},
-    };
-}
-
-static inline struct u32x4
-chacha_quarter(uint32_t a, uint32_t b, uint32_t c, uint32_t d)
-{
-    a += b;
-    d = rotate_left_u32(d ^ a, 16);
-    c += d;
-    b = rotate_left_u32(b ^ c, 12);
-    a += b;
-    d = rotate_left_u32(d ^ a, 8);
-    c += d;
-    b = rotate_left_u32(b ^ c, 7);
-    return (struct u32x4){a, b, c, d};
-}
-
-// Rotation is only defined for positive `n` less than the bit size.
-static inline uint32_t
-rotate_left_u32(uint32_t const x, int const n)
-{
-    return (x << n) | (x >> (32 - n));
-}
-
-static inline uint32_t
-u32_from_u8(uint8_t const a, uint8_t const b, uint8_t const c, uint8_t const d)
-{
-    return a | (uint32_t)b << 8 | (uint32_t)c << 16 | (uint32_t)d << 24;
-}
-
-static inline void
-u32x4x4_to_bytes(struct u32x4x4 const x, uint8_t out[static const 64])
-{
-    u32x4_to_bytes(x.a, &out[0]);
-    u32x4_to_bytes(x.b, &out[16]);
-    u32x4_to_bytes(x.c, &out[32]);
-    u32x4_to_bytes(x.d, &out[48]);
-}
-
-static inline void
-u32x4_to_bytes(struct u32x4 const x, uint8_t out[static const 16])
-{
-    u32_to_bytes(x.a, &out[0]);
-    u32_to_bytes(x.b, &out[4]);
-    u32_to_bytes(x.c, &out[8]);
-    u32_to_bytes(x.d, &out[12]);
-}
-
-static inline void
-u32_to_bytes(uint32_t const x, uint8_t out[static const 4])
-{
-    out[0] = (uint8_t)x;
-    out[1] = (uint8_t)(x >> 8);
-    out[2] = (uint8_t)(x >> 16);
-    out[3] = (uint8_t)(x >> 24);
 }
