@@ -7,16 +7,9 @@
 // TODO(rupt): test non-multiples of 64 bytes
 // TODO(rupt): test more than 64 bytes
 
-static void test_chacha_64(
-    int label,
-    // TODO(rupt): use key and nonce structures
-    // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
-    uint8_t const key[static 32], uint8_t const nonce[static 8],
-    uint8_t const expected[static 64]);
-
-struct mynonce {
-    uint8_t value[8];
-};
+static void test_chacha_64(int label, struct vrr_chacha_key key1,
+                           struct vrr_chacha_nonce nonce1,
+                           uint8_t const expected[static 64]);
 
 int
 main(void)
@@ -24,8 +17,8 @@ main(void)
     // Test vectors from this draft RFC, with case 2 padded with observed values
     // https://datatracker.ietf.org/doc/html/draft-agl-tls-chacha20poly1305-04#section-7
     {
-        uint8_t const key[32] = {0};
-        uint8_t const nonce[8] = {0};
+        struct vrr_chacha_key const key = {{0}};
+        struct vrr_chacha_nonce const nonce = {{0}};
         uint8_t const expected[64] = {
             0x76, 0xb8, 0xe0, 0xad, 0xa0, 0xf1, 0x3d, 0x90, 0x40, 0x5d, 0x6a,
             0xe5, 0x53, 0x86, 0xbd, 0x28, 0xbd, 0xd2, 0x19, 0xb8, 0xa0, 0x8d,
@@ -37,8 +30,8 @@ main(void)
         test_chacha_64(/*label=*/0, key, nonce, expected);
     }
     {
-        uint8_t const key[32] = {[31] = 1};
-        uint8_t const nonce[8] = {0};
+        struct vrr_chacha_key const key = {{[31] = 1}};
+        struct vrr_chacha_nonce const nonce = {{0}};
         uint8_t const expected[64] = {
             0x45, 0x40, 0xf0, 0x5a, 0x9f, 0x1f, 0xb2, 0x96, 0xd7, 0x73, 0x6e,
             0x7b, 0x20, 0x8e, 0x3c, 0x96, 0xeb, 0x4f, 0xe1, 0x83, 0x46, 0x88,
@@ -50,8 +43,8 @@ main(void)
         test_chacha_64(/*label=*/1, key, nonce, expected);
     }
     {
-        uint8_t const key[32] = {0};
-        uint8_t const nonce[8] = {[7] = 1};
+        struct vrr_chacha_key const key = {{0}};
+        struct vrr_chacha_nonce const nonce = {{[7] = 1}};
         uint8_t const expected[64] = {
             0xde, 0x9c, 0xba, 0x7b, 0xf3, 0xd6, 0x9e, 0xf5, 0xe7, 0x86, 0xdc,
             0x63, 0x97, 0x3f, 0x65, 0x3a, 0x0b, 0x49, 0xe0, 0x15, 0xad, 0xbf,
@@ -63,8 +56,8 @@ main(void)
         test_chacha_64(/*label=*/2, key, nonce, expected);
     }
     {
-        uint8_t const key[32] = {0};
-        uint8_t const nonce[8] = {1};
+        struct vrr_chacha_key const key = {{0}};
+        struct vrr_chacha_nonce const nonce = {{1}};
         uint8_t const expected[64] = {
             0xef, 0x3f, 0xdf, 0xd6, 0xc6, 0x15, 0x78, 0xfb, 0xf5, 0xcf, 0x35,
             0xbd, 0x3d, 0xd3, 0x3b, 0x80, 0x09, 0x63, 0x16, 0x34, 0xd2, 0x1e,
@@ -78,16 +71,12 @@ main(void)
 }
 
 static void
-test_chacha_64(int const label,
-               // TODO(rupt): use key and nonce structures
-               // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
-               uint8_t const key[static const 32],
-               // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
-               uint8_t const nonce[static const 8],
+test_chacha_64(int const label, struct vrr_chacha_key const key1,
+               struct vrr_chacha_nonce const nonce1,
                uint8_t const expected[static const 64])
 {
     uint8_t stream[64];
-    vrr_chacha_stream(key, nonce, sizeof(stream), stream);
+    vrr_chacha_stream(key1, nonce1, sizeof(stream), stream);
     for (int i = 0; i < 64; ++i) {
         if (stream[i] != expected[i]) {
             printf(vrr_observed("%d: [%2d] == 0x%02x"), label, i, stream[i]);

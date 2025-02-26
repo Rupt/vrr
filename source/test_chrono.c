@@ -43,8 +43,8 @@ simple_loop(void)
 void
 chacha(void)
 {
-    uint8_t const key[32] = {0};
-    uint8_t const nonce[8] = {0};
+    struct vrr_chacha_key const key = {{0}};
+    struct vrr_chacha_nonce const nonce = {{0}};
     uint8_t stream[1024 * 1024];
     vrr_chacha_stream(key, nonce, sizeof(stream), stream);
     (void)stream;  // unused

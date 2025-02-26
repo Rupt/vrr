@@ -3,8 +3,14 @@
 #include <stdint.h>
 #endif
 
-void vrr_chacha_stream(
-    // TODO(rupt): use key and nonce structures
-    // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
-    uint8_t const key[static 32], uint8_t const nonce[static 8],
-    unsigned long long n, uint8_t *out);
+struct vrr_chacha_key {
+    uint8_t key[32];
+};
+
+struct vrr_chacha_nonce {
+    uint8_t nonce[8];
+};
+
+void vrr_chacha_stream(struct vrr_chacha_key key1,
+                       struct vrr_chacha_nonce nonce1, unsigned long long n,
+                       uint8_t *out);
