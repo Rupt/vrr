@@ -81,9 +81,9 @@ chacha_double(struct u32x4x4 const x)
     struct u32x4 const v3 = chacha_quarter(c.a, d.b, a.c, b.d);
     struct u32x4 const v4 = chacha_quarter(d.a, a.b, b.c, c.d);
     return (struct u32x4x4){
-        {v1.a, v2.a, v3.a, v4.a},  // format first row
-        {v4.b, v1.b, v2.b, v3.b},  // format second row
-        {v3.c, v4.c, v1.c, v2.c},  // format third row
+        {v1.a, v2.a, v3.a, v4.a},
+        {v4.b, v1.b, v2.b, v3.b},
+        {v3.c, v4.c, v1.c, v2.c},
         {v2.d, v3.d, v4.d, v1.d},
     };
 }
@@ -122,7 +122,7 @@ vrr_chacha_stream(struct vrr_chacha_key const key,
          u32_from_u8(key.x[20], key.x[21], key.x[22], key.x[23]),
          u32_from_u8(key.x[24], key.x[25], key.x[26], key.x[27]),
          u32_from_u8(key.x[28], key.x[29], key.x[30], key.x[31])},
-        // fourth row: nonce | counter
+        // fourth row: {counter, nonce}
         {0x00000000, 0x00000000,
          u32_from_u8(nonce.x[0], nonce.x[1], nonce.x[2], nonce.x[3]),
          u32_from_u8(nonce.x[4], nonce.x[5], nonce.x[6], nonce.x[7])},
@@ -139,7 +139,10 @@ vrr_chacha_stream(struct vrr_chacha_key const key,
     if (remainder == 0) {
         return;
     }
-    state.d.d = (uint32_t)(n / 64);
+    // TODO(rupt): a function to assign the counter?
+    uint64_t i_remainder = (uint32_t)(n / 64);
+    state.d.a = (uint32_t)i_remainder;
+    state.d.b = (uint32_t)(i_remainder >> 32);
     uint8_t tmp[64];
     struct u32x4x4 v = chacha20(state);
     u32x4x4_to_bytes(v, tmp);
