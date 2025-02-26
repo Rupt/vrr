@@ -5,7 +5,6 @@
 
 struct vrr_u32x4x4 {
     // TODO(rupt): contain 4 vrr_u32x4 structures?
-    // TODO(rupt): reconsider transposed labelling
     uint32_t aa, ba, ca, da;
     uint32_t ab, bb, cb, db;
     uint32_t ac, bc, cc, dc;
