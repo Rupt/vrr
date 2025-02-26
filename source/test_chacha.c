@@ -87,7 +87,7 @@ test_chacha_64(int const label,
                uint8_t const expected[static const 64])
 {
     uint8_t stream[64];
-    vrr_chacha_stream(key, nonce, 64, stream);
+    vrr_chacha_stream(key, nonce, sizeof(stream), stream);
     for (int i = 0; i < 64; ++i) {
         if (stream[i] != expected[i]) {
             printf(vrr_observed("%d: [%2d] == 0x%02x"), label, i, stream[i]);
