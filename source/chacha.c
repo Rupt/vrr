@@ -107,8 +107,8 @@ chacha20(struct u32x4x4 const x)
 }
 
 void
-vrr_chacha_stream(struct vrr_chacha_key const key1,
-                  struct vrr_chacha_nonce const nonce1,
+vrr_chacha_stream(struct vrr_chacha_key const key,
+                  struct vrr_chacha_nonce const nonce,
                   unsigned long long const n, uint8_t *out)
 {
     // TODO(rupt): avoid mutating state
@@ -116,21 +116,19 @@ vrr_chacha_stream(struct vrr_chacha_key const key1,
         // first row: constant
         {0x61707865, 0x3320646e, 0x79622d32, 0x6b206574},
         // second row: key part 1
-        {u32_from_u8(key1.key[0], key1.key[1], key1.key[2], key1.key[3]),
-         u32_from_u8(key1.key[4], key1.key[5], key1.key[6], key1.key[7]),
-         u32_from_u8(key1.key[8], key1.key[9], key1.key[10], key1.key[11]),
-         u32_from_u8(key1.key[12], key1.key[13], key1.key[14], key1.key[15])},
+        {u32_from_u8(key.x[0], key.x[1], key.x[2], key.x[3]),
+         u32_from_u8(key.x[4], key.x[5], key.x[6], key.x[7]),
+         u32_from_u8(key.x[8], key.x[9], key.x[10], key.x[11]),
+         u32_from_u8(key.x[12], key.x[13], key.x[14], key.x[15])},
         // third row: key part 2
-        {u32_from_u8(key1.key[16], key1.key[17], key1.key[18], key1.key[19]),
-         u32_from_u8(key1.key[20], key1.key[21], key1.key[22], key1.key[23]),
-         u32_from_u8(key1.key[24], key1.key[25], key1.key[26], key1.key[27]),
-         u32_from_u8(key1.key[28], key1.key[29], key1.key[30], key1.key[31])},
+        {u32_from_u8(key.x[16], key.x[17], key.x[18], key.x[19]),
+         u32_from_u8(key.x[20], key.x[21], key.x[22], key.x[23]),
+         u32_from_u8(key.x[24], key.x[25], key.x[26], key.x[27]),
+         u32_from_u8(key.x[28], key.x[29], key.x[30], key.x[31])},
         // fourth row: nonce | counter
         {0x00000000, 0x00000000,
-         u32_from_u8(nonce1.nonce[0], nonce1.nonce[1], nonce1.nonce[2],
-                     nonce1.nonce[3]),
-         u32_from_u8(nonce1.nonce[4], nonce1.nonce[5], nonce1.nonce[6],
-                     nonce1.nonce[7])},
+         u32_from_u8(nonce.x[0], nonce.x[1], nonce.x[2], nonce.x[3]),
+         u32_from_u8(nonce.x[4], nonce.x[5], nonce.x[6], nonce.x[7])},
     };
     for (uint64_t i = 0; i < n / 64; ++i) {
         // TODO(rupt): a function to assign the counter?
