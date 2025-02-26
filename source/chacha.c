@@ -16,13 +16,6 @@ struct u32x4x4 {
     struct u32x4 a, b, c, d;
 };
 
-// Rotation is only defined for positive `n` less than the bit size.
-static inline uint32_t
-rotate_left_u32(uint32_t const x, int const n)
-{
-    return (x << n) | (x >> (32 - n));
-}
-
 static inline uint32_t
 u32_from_u8(uint8_t const a, uint8_t const b, uint8_t const c, uint8_t const d)
 {
@@ -60,13 +53,17 @@ static inline struct u32x4
 chacha_quarter(uint32_t a, uint32_t b, uint32_t c, uint32_t d)
 {
     a += b;
-    d = rotate_left_u32(d ^ a, 16);
+    d ^= a;
+    d = (d << 16) | (d >> 16);
     c += d;
-    b = rotate_left_u32(b ^ c, 12);
+    b ^= c;
+    b = (b << 12) | (b >> 20);
     a += b;
-    d = rotate_left_u32(d ^ a, 8);
+    d ^= a;
+    d = (d << 8) | (d >> 24);
     c += d;
-    b = rotate_left_u32(b ^ c, 7);
+    b ^= c;
+    b = (b << 7) | (b >> 25);
     return (struct u32x4){a, b, c, d};
 }
 
