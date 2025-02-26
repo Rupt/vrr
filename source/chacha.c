@@ -22,19 +22,19 @@ vrr_chacha_stream(
         // first row: constant
         {0x61707865, 0x3320646e, 0x79622d32, 0x6b206574},
         // second row: key part 1
-        {vrr_u32(key[0], key[1], key[2], key[3]),
-         vrr_u32(key[4], key[5], key[6], key[7]),
-         vrr_u32(key[8], key[9], key[10], key[11]),
-         vrr_u32(key[12], key[13], key[14], key[15])},
+        {vrr_u32_from_u8(key[0], key[1], key[2], key[3]),
+         vrr_u32_from_u8(key[4], key[5], key[6], key[7]),
+         vrr_u32_from_u8(key[8], key[9], key[10], key[11]),
+         vrr_u32_from_u8(key[12], key[13], key[14], key[15])},
         // third row: key part 2
-        {vrr_u32(key[16], key[17], key[18], key[19]),
-         vrr_u32(key[20], key[21], key[22], key[23]),
-         vrr_u32(key[24], key[25], key[26], key[27]),
-         vrr_u32(key[28], key[29], key[30], key[31])},
+        {vrr_u32_from_u8(key[16], key[17], key[18], key[19]),
+         vrr_u32_from_u8(key[20], key[21], key[22], key[23]),
+         vrr_u32_from_u8(key[24], key[25], key[26], key[27]),
+         vrr_u32_from_u8(key[28], key[29], key[30], key[31])},
         // fourth row: nonce | counter
         {0x00000000, 0x00000000,
-         vrr_u32(nonce[0], nonce[1], nonce[2], nonce[3]),
-         vrr_u32(nonce[4], nonce[5], nonce[6], nonce[7])},
+         vrr_u32_from_u8(nonce[0], nonce[1], nonce[2], nonce[3]),
+         vrr_u32_from_u8(nonce[4], nonce[5], nonce[6], nonce[7])},
     };
     for (uint64_t i = 0; i < n / 64; ++i) {
         // TODO(rupt): a function to assign the counter?

@@ -21,7 +21,8 @@ test_u32_to_from_u8x4(void)
     // A known case must hold.
     struct vrr_u8x4 const example = {0x0a, 0x1b, 0x2c, 0x3d};
     uint32_t const reference = 0x3d2c1b0a;
-    uint32_t const check = vrr_u32_from_u8x4(example);
+    uint32_t const check =
+        vrr_u32_from_u8(example.a, example.b, example.c, example.d);
     if (check != reference) {
         printf(vrr_observed("0x%08x"), check);
         printf(vrr_expected("0x%08x"), reference);
@@ -36,7 +37,7 @@ test_u32_to_from_u8x4(void)
 
     // Structured and destructured forms must match.
     uint32_t const check_destructured =
-        vrr_u32(example.a, example.b, example.c, example.d);
+        vrr_u32_from_u8(example.a, example.b, example.c, example.d);
     if (check_destructured != reference) {
         printf(vrr_observed("0x%08x"), check_destructured);
         printf(vrr_expected("0x%08x"), reference);
@@ -60,7 +61,7 @@ test_u32_to_from_u8x4_case(uint32_t const x)
     }
 
     // Our inverse function must reconstruct the original.
-    uint32_t const check = vrr_u32_from_u8x4(bytes);
+    uint32_t const check = vrr_u32_from_u8(bytes.a, bytes.b, bytes.c, bytes.d);
     if (check != x) {
         printf(vrr_observed("0x%08x"), check);
         printf(vrr_expected("0x%08x"), x);

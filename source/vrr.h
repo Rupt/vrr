@@ -15,12 +15,6 @@ struct vrr_u8x4 {
     uint8_t a, b, c, d;
 };
 
-static inline uint32_t
-vrr_u32_from_u8x4(struct vrr_u8x4 const x)
-{
-    return x.a | (uint32_t)x.b << 8 | (uint32_t)x.c << 16 | (uint32_t)x.d << 24;
-}
-
 static inline struct vrr_u8x4
 vrr_u8x4_from_u32(uint32_t const x)
 {
@@ -29,10 +23,10 @@ vrr_u8x4_from_u32(uint32_t const x)
 }
 
 static inline uint32_t
-vrr_u32(uint8_t const a, uint8_t const b, uint8_t const c, uint8_t const d)
+vrr_u32_from_u8(uint8_t const a, uint8_t const b, uint8_t const c,
+                uint8_t const d)
 {
-    // TODO(rupt): delete?
-    return vrr_u32_from_u8x4((struct vrr_u8x4){a, b, c, d});
+    return a | (uint32_t)b << 8 | (uint32_t)c << 16 | (uint32_t)d << 24;
 }
 
 static inline void
@@ -63,9 +57,9 @@ vrr_u32x4x4_to_bytes(struct vrr_u32x4x4 const x, uint8_t out[static const 64])
     vrr_u32x4_to_bytes(x.d, &out[48]);
 }
 
+// Rotation is only defined for positive `n` less than the bit size.
 static inline uint32_t
 vrr_rotate_left_u32(uint32_t const x, int const n)
 {
-    // WARNING: defined only for `1 <= n && n <= 31`.
     return (x << n) | (x >> (32 - n));
 }
