@@ -1,13 +1,36 @@
 #ifdef VRR_INCLUDE_GUARD
 #undef VRR_INCLUDE_GUARD
-#include <stdint.h>  // for vrr.h
-#include "vrr.h"  // struct vrr_u32x4x4, struct vrr_u32x4, vrr_rotate_left_u32
+#include <stdint.h>
 #include "chacha.h"
 #endif
 
+struct vrr_u32x4 {
+    uint32_t a, b, c, d;
+};
+
+struct vrr_u8x4 {
+    uint8_t a, b, c, d;
+};
+
+struct vrr_u32x4x4 {
+    struct vrr_u32x4 a, b, c, d;
+};
+
+static inline struct vrr_u32x4x4 vrr_chacha20(struct vrr_u32x4x4 x);
 static inline struct vrr_u32x4x4 vrr_chacha_double(struct vrr_u32x4x4 x);
 static inline struct vrr_u32x4 vrr_chacha_quarter(uint32_t a, uint32_t b,
                                                   uint32_t c, uint32_t d);
+
+static inline struct vrr_u8x4 vrr_u8x4_from_u32(uint32_t x);
+static inline uint32_t vrr_u32_from_u8(uint8_t a, uint8_t b, uint8_t c,
+                                       uint8_t d);
+static inline void vrr_u32_to_bytes(uint32_t x, uint8_t out[static const 4]);
+static inline void vrr_u32x4_to_bytes(struct vrr_u32x4 x,
+                                      uint8_t out[static const 16]);
+
+static inline void vrr_u32x4x4_to_bytes(struct vrr_u32x4x4 x,
+                                        uint8_t out[static const 64]);
+static inline uint32_t vrr_rotate_left_u32(uint32_t x, int n);
 
 // TODO(rupt): only publicly expose the bytestream api.
 void
@@ -57,7 +80,7 @@ vrr_chacha_stream(
     }
 }
 
-struct vrr_u32x4x4
+static inline struct vrr_u32x4x4
 vrr_chacha20(struct vrr_u32x4x4 const x)
 {
     struct vrr_u32x4x4 v = x;
@@ -105,4 +128,53 @@ vrr_chacha_quarter(uint32_t a, uint32_t b, uint32_t c, uint32_t d)
     c += d;
     b = vrr_rotate_left_u32(b ^ c, 7);
     return (struct vrr_u32x4){a, b, c, d};
+}
+
+static inline struct vrr_u8x4
+vrr_u8x4_from_u32(uint32_t const x)
+{
+    return (struct vrr_u8x4){(uint8_t)x, (uint8_t)(x >> 8), (uint8_t)(x >> 16),
+                             (uint8_t)(x >> 24)};
+}
+
+static inline uint32_t
+vrr_u32_from_u8(uint8_t const a, uint8_t const b, uint8_t const c,
+                uint8_t const d)
+{
+    return a | (uint32_t)b << 8 | (uint32_t)c << 16 | (uint32_t)d << 24;
+}
+
+static inline void
+vrr_u32_to_bytes(uint32_t const x, uint8_t out[static const 4])
+{
+    struct vrr_u8x4 split = vrr_u8x4_from_u32(x);
+    out[0] = split.a;
+    out[1] = split.b;
+    out[2] = split.c;
+    out[3] = split.d;
+}
+
+static inline void
+vrr_u32x4_to_bytes(struct vrr_u32x4 const x, uint8_t out[static const 16])
+{
+    vrr_u32_to_bytes(x.a, &out[0]);
+    vrr_u32_to_bytes(x.b, &out[4]);
+    vrr_u32_to_bytes(x.c, &out[8]);
+    vrr_u32_to_bytes(x.d, &out[12]);
+}
+
+static inline void
+vrr_u32x4x4_to_bytes(struct vrr_u32x4x4 const x, uint8_t out[static const 64])
+{
+    vrr_u32x4_to_bytes(x.a, &out[0]);
+    vrr_u32x4_to_bytes(x.b, &out[16]);
+    vrr_u32x4_to_bytes(x.c, &out[32]);
+    vrr_u32x4_to_bytes(x.d, &out[48]);
+}
+
+// Rotation is only defined for positive `n` less than the bit size.
+static inline uint32_t
+vrr_rotate_left_u32(uint32_t const x, int const n)
+{
+    return (x << n) | (x >> (32 - n));
 }

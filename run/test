@@ -1,4 +1,3 @@
 set -eu
 
-tcc -run source/test_vrr.c
 tcc build/chacha.o -run source/test_chacha.c

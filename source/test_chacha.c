@@ -2,7 +2,6 @@
 #include <stdio.h>
 
 #include "test.h"
-#include "vrr.h"
 #include "chacha.h"
 
 // TODO(rupt): test non-multiples of 64 bytes
