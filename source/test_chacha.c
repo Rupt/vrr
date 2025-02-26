@@ -7,9 +7,20 @@
 // TODO(rupt): test non-multiples of 64 bytes
 // TODO(rupt): test more than 64 bytes
 
-static void test_chacha_64(int label, struct vrr_chacha_key key1,
-                           struct vrr_chacha_nonce nonce1,
-                           uint8_t const expected[static 64]);
+static void
+test_chacha_64(int const label, struct vrr_chacha_key const key1,
+               struct vrr_chacha_nonce const nonce1,
+               uint8_t const expected[static const 64])
+{
+    uint8_t stream[64];
+    vrr_chacha_stream(key1, nonce1, sizeof(stream), stream);
+    for (int i = 0; i < 64; ++i) {
+        if (stream[i] != expected[i]) {
+            printf(vrr_observed("%d: [%2d] == 0x%02x"), label, i, stream[i]);
+            printf(vrr_expected("%d: [%2d] == 0x%02x"), label, i, expected[i]);
+        }
+    }
+}
 
 int
 main(void)
@@ -67,20 +78,5 @@ main(void)
             0x7d, 0x6b, 0xbd, 0xb0, 0x04, 0x1b, 0x2f, 0x58, 0x6b};
 
         test_chacha_64(/*label=*/3, key, nonce, expected);
-    }
-}
-
-static void
-test_chacha_64(int const label, struct vrr_chacha_key const key1,
-               struct vrr_chacha_nonce const nonce1,
-               uint8_t const expected[static const 64])
-{
-    uint8_t stream[64];
-    vrr_chacha_stream(key1, nonce1, sizeof(stream), stream);
-    for (int i = 0; i < 64; ++i) {
-        if (stream[i] != expected[i]) {
-            printf(vrr_observed("%d: [%2d] == 0x%02x"), label, i, stream[i]);
-            printf(vrr_expected("%d: [%2d] == 0x%02x"), label, i, expected[i]);
-        }
     }
 }
