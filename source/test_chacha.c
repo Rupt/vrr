@@ -8,22 +8,20 @@
 // TODO(rupt): test more than 64 bytes
 
 static void
-test_chacha_64(int const label, struct vrr_chacha_key const key1,
-               struct vrr_chacha_nonce const nonce1,
-               uint8_t const expected[static const 64])
+check_streams(char const *const label, uint64_t const count,
+              uint8_t const *const observed, uint8_t const *const expected)
 {
-    uint8_t stream[64];
-    vrr_chacha_stream(key1, nonce1, sizeof(stream), stream);
-    for (int i = 0; i < 64; ++i) {
-        if (stream[i] != expected[i]) {
-            printf(vrr_observed("%d: [%2d] == 0x%02x"), label, i, stream[i]);
-            printf(vrr_expected("%d: [%2d] == 0x%02x"), label, i, expected[i]);
+    for (uint64_t i = 0; i < count; ++i) {
+        if (observed[i] == expected[i]) {
+            continue;
         }
+        printf(vrr_observed("%s: [%lu] == 0x%02hhx"), label, i, observed[i]);
+        printf(vrr_expected("%s: [%lu] == 0x%02hhx"), label, i, expected[i]);
     }
 }
 
-int
-main(void)
+static void
+test_rfc(void)
 {
     // Test vectors from this draft RFC, with case 2 padded with observed values
     // https://datatracker.ietf.org/doc/html/draft-agl-tls-chacha20poly1305-04#section-7
@@ -37,8 +35,9 @@ main(void)
             0x41, 0x59, 0x7c, 0x51, 0x57, 0x48, 0x8d, 0x77, 0x24, 0xe0, 0x3f,
             0xb8, 0xd8, 0x4a, 0x37, 0x6a, 0x43, 0xb8, 0xf4, 0x15, 0x18, 0xa1,
             0x1c, 0xc3, 0x87, 0xb6, 0x69, 0xb2, 0xee, 0x65, 0x86};
-
-        test_chacha_64(/*label=*/0, key, nonce, expected);
+        uint8_t observed[sizeof(expected)];
+        vrr_chacha_stream(key, nonce, sizeof(expected), observed);
+        check_streams("0", sizeof(expected), observed, expected);
     }
     {
         struct vrr_chacha_key const key = {{[31] = 1}};
@@ -50,8 +49,9 @@ main(void)
             0xe2, 0xa0, 0xb6, 0xea, 0x75, 0x66, 0xd2, 0xa5, 0xd1, 0xe7, 0xe2,
             0x0d, 0x42, 0xaf, 0x2c, 0x53, 0xd7, 0x92, 0xb1, 0xc4, 0x3f, 0xea,
             0x81, 0x7e, 0x9a, 0xd2, 0x75, 0xae, 0x54, 0x69, 0x63};
-
-        test_chacha_64(/*label=*/1, key, nonce, expected);
+        uint8_t observed[sizeof(expected)];
+        vrr_chacha_stream(key, nonce, sizeof(expected), observed);
+        check_streams("1", sizeof(expected), observed, expected);
     }
     {
         struct vrr_chacha_key const key = {{0}};
@@ -63,8 +63,9 @@ main(void)
             0x5a, 0x05, 0x02, 0x78, 0xa7, 0x08, 0x45, 0x27, 0x21, 0x4f, 0x73,
             0xef, 0xc7, 0xfa, 0x5b, 0x52, 0x77, 0x06, 0x2e, 0xb7, 0xa0, 0x43,
             0x3e, 0x44, 0x5f, 0x41, 0xe3, 0x1a, 0xfa, 0xb7, 0x57};
-
-        test_chacha_64(/*label=*/2, key, nonce, expected);
+        uint8_t observed[sizeof(expected)];
+        vrr_chacha_stream(key, nonce, sizeof(expected), observed);
+        check_streams("2", sizeof(expected), observed, expected);
     }
     {
         struct vrr_chacha_key const key = {{0}};
@@ -76,7 +77,20 @@ main(void)
             0x1e, 0x4c, 0xaf, 0x23, 0x7e, 0xe5, 0x3c, 0xa8, 0xad, 0x64, 0x26,
             0x19, 0x4a, 0x88, 0x54, 0x5d, 0xdc, 0x49, 0x7a, 0x0b, 0x46, 0x6e,
             0x7d, 0x6b, 0xbd, 0xb0, 0x04, 0x1b, 0x2f, 0x58, 0x6b};
-
-        test_chacha_64(/*label=*/3, key, nonce, expected);
+        uint8_t observed[sizeof(expected)];
+        vrr_chacha_stream(key, nonce, sizeof(expected), observed);
+        check_streams("3", sizeof(expected), observed, expected);
     }
+}
+
+static void
+test_prefixes(void)
+{
+}
+
+int
+main(void)
+{
+    test_rfc();
+    test_prefixes();
 }
