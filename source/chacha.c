@@ -147,6 +147,6 @@ vrr_chacha_stream(struct vrr_chacha_key const key,
     struct u32x4x4 v = chacha20(state);
     u32x4x4_to_bytes(v, tmp);
     for (unsigned long i = 0; i < remainder; ++i) {
-        out[n / 64 * 64 + i] = tmp[i];
+        out[i_remainder * 64 + i] = tmp[i];
     }
 }

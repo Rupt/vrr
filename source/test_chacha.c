@@ -4,19 +4,16 @@
 #include "test.h"
 #include "chacha.h"
 
-// TODO(rupt): test non-multiples of 64 bytes
-// TODO(rupt): test more than 64 bytes
-
 static void
-check_streams(char const *const label, uint64_t const count,
+check_streams(char const *const label, unsigned long long const count,
               uint8_t const *const observed, uint8_t const *const expected)
 {
-    for (uint64_t i = 0; i < count; ++i) {
+    for (unsigned long long i = 0; i < count; ++i) {
         if (observed[i] == expected[i]) {
             continue;
         }
-        printf(vrr_observed("%s: [%lu] == 0x%02hhx"), label, i, observed[i]);
-        printf(vrr_expected("%s: [%lu] == 0x%02hhx"), label, i, expected[i]);
+        printf(vrr_observed("%s: [%llu] == 0x%02hhx"), label, i, observed[i]);
+        printf(vrr_expected("%s: [%llu] == 0x%02hhx"), label, i, expected[i]);
     }
 }
 
@@ -86,6 +83,17 @@ test_rfc(void)
 static void
 test_prefixes(void)
 {
+    struct vrr_chacha_key const key = {{[3] = 0xab, [31] = 0xba}};
+    struct vrr_chacha_nonce const nonce = {{3, 1, 4, 1, 5, 9, 2, 6}};
+    uint8_t full[256];
+    vrr_chacha_stream(key, nonce, sizeof(full), full);
+    uint8_t partial[sizeof(full)];
+    unsigned long long checks[] = {0, 1, 2, 3, 4, 45, 63, 64, 65, 255, 256};
+    for (unsigned long long i = 0; i < sizeof(checks) / sizeof(*checks); ++i) {
+        unsigned long long count = checks[i];
+        vrr_chacha_stream(key, nonce, count, partial);
+        check_streams("prefix", count, partial, full);
+    }
 }
 
 int
