@@ -14,7 +14,7 @@ lint:
 	run/lint
 
 .PHONY: time
-time: build/chacha.o build/chrono.o build/test.o
+time: build/chacha.o build/chrono.o
 	run/time
 
 build/%.o: source/%.c source/%.h build/.vrr
