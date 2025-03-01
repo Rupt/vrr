@@ -107,10 +107,10 @@ test_checksum(void)
     for (int i = 0; i < 8; ++i) {
         nonce.x[i] = (uint8_t)i;
     }
-    uint8_t stream[10240];
+    uint8_t stream[12345];
     vrr_chacha_stream(key, nonce, sizeof(stream), stream);
     uint64_t const observed = vrr_checksum(sizeof(stream), stream);
-    uint64_t const expected = 0x871edc119b3ce57b;
+    uint64_t const expected = 0x96caf0aaeebcc7f2;
     if (observed != expected) {
         printf(vrr_observed("checksum 0x%016lx"), observed);
         printf(vrr_expected("checksum 0x%016lx"), expected);
