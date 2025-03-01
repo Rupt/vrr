@@ -1,6 +1,6 @@
 #ifdef VRR_INCLUDE_GUARD
 #undef VRR_INCLUDE_GUARD
-#include <stdint.h>
+#include <stdint.h>  // uint8_t
 #endif
 
 struct vrr_chacha_key {

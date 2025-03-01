@@ -1,12 +1,12 @@
 CFLAGS_LANGUAGE := -std=gnu99 -fwrapv -fno-strict-aliasing
 CFLAGS_STRICT := -pedantic -Werror -Wall -Wextra -Wconversion -Walloca -Wshadow -Wundef -Wwrite-strings -Wvla
-CFLAGS_COMPILE := -Os -march=native
+CFLAGS_COMPILE := -Os -march=native -mprefer-vector-width=512
 CFLAGS := $(CFLAGS_LANGUAGE) $(CFLAGS_STRICT) $(CFLAGS_COMPILE)
 
-default: build/chacha.o build/chrono.o
+default: build/chacha.o build/chrono.o build/test.o
 
 .PHONY: test
-test: build/chacha.o
+test: build/chacha.o build/test.o
 	run/test
 
 .PHONY: lint

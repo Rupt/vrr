@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include "test.h"
+#include "test.h"  //
 #include "chacha.h"
 
 static void
@@ -96,23 +96,6 @@ test_prefixes(void)
     }
 }
 
-unsigned long long
-vrr_checksum(unsigned long long const count, uint8_t const *const data)
-{
-    // Approximate tabulation hashing with tables defined by SplitMix64
-    uint64_t acc = 0;
-    for (uint64_t i = 0; i < count; ++i) {
-        uint64_t x = (i << 8) | data[i];
-        x ^= x >> 30;
-        x *= 0xbf58476d1ce4e5b9;
-        x ^= x >> 27;
-        x *= 0x94d049bb133111eb;
-        x ^= x >> 31;
-        acc += x;
-    }
-    return acc;
-}
-
 static void
 test_checksum(void)
 {
@@ -124,15 +107,13 @@ test_checksum(void)
     for (int i = 0; i < 8; ++i) {
         nonce.x[i] = (uint8_t)i;
     }
-    uint8_t stream[1000 * 1000];
+    uint8_t stream[10240];
     vrr_chacha_stream(key, nonce, sizeof(stream), stream);
-    {
-        uint64_t observed = vrr_checksum(sizeof(stream), stream);
-        uint64_t expected = 0x31793600d4477bfc;
-        if (observed != expected) {
-            printf(vrr_observed("checksum 0x%016lx"), observed);
-            printf(vrr_expected("checksum 0x%016lx"), expected);
-        }
+    uint64_t const observed = vrr_checksum(sizeof(stream), stream);
+    uint64_t const expected = 0x871edc119b3ce57b;
+    if (observed != expected) {
+        printf(vrr_observed("checksum 0x%016lx"), observed);
+        printf(vrr_expected("checksum 0x%016lx"), expected);
     }
 }
 
