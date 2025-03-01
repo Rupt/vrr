@@ -10,4 +10,4 @@
 #define vrr_expected(format) (VRR_UNSTABLE_LOG "expected: " format "\n")
 #define vrr_observed(format) (VRR_UNSTABLE_LOG "observed: " format "\n")
 
-uint64_t vrr_checksum(unsigned long long count, uint8_t const* data);
+uint64_t vrr_checksum(unsigned long long count, uint8_t const* bytes);
