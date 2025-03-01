@@ -32,6 +32,15 @@ chacha(void)
     (void)stream;  // unused
 }
 
+static uint8_t const checksum_data[1000 * 1000];
+
+void
+checksum(void)
+{
+    vrr_checksum(sizeof(checksum_data), checksum_data);
+}
+
+
 int
 main(void)
 {
@@ -44,4 +53,7 @@ main(void)
     printf("     chacha: %9lld ns\n", vrr_time_ns_best_of_50(chacha));
     printf("     chacha: %9lld ns\n", vrr_time_ns_best_of_50(chacha));
     printf("     chacha: %9lld ns\n", vrr_time_ns_best_of_50(chacha));
+    printf("   checksum: %9lld ns\n", vrr_time_ns_best_of_50(checksum));
+    printf("   checksum: %9lld ns\n", vrr_time_ns_best_of_50(checksum));
+    printf("   checksum: %9lld ns\n", vrr_time_ns_best_of_50(checksum));
 }
