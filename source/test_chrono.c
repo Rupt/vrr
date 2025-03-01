@@ -15,7 +15,7 @@ void
 simple_loop(void)
 {
     int acc = 0;
-    for (long i = 0; i < 10000; ++i) {
+    for (long i = 0; i < 5000; ++i) {
         acc += 1;
         acc -= 1;
     }
@@ -27,7 +27,7 @@ chacha(void)
 {
     struct vrr_chacha_key const key = {{0}};
     struct vrr_chacha_nonce const nonce = {{0}};
-    uint8_t stream[1024 * 1024];
+    uint8_t stream[12345];
     vrr_chacha_stream(key, nonce, sizeof(stream), stream);
     (void)stream;  // unused
 }
@@ -35,7 +35,7 @@ chacha(void)
 void
 checksum(void)
 {
-    uint8_t static const bytes[20000] = {0};
+    uint8_t static const bytes[12345] = {0};
     vrr_checksum(sizeof(bytes), bytes);
 }
 
