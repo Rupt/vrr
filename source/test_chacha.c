@@ -110,7 +110,7 @@ test_checksum(void)
     uint8_t stream[12345];
     vrr_chacha_stream(key, nonce, sizeof(stream), stream);
     uint64_t const observed = vrr_checksum(sizeof(stream), stream);
-    uint64_t const expected = 0xfe3cb21fcc0a9e5a;
+    uint64_t const expected = 0x4f5581bca0e30b15;
     if (observed != expected) {
         printf(vrr_observed("checksum 0x%016lx"), observed);
         printf(vrr_expected("checksum 0x%016lx"), expected);

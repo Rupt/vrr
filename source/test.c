@@ -19,9 +19,8 @@ vrr_checksum(unsigned long long const count, uint8_t const *const bytes)
         x *= 0xbf58476d1ce4e5b9;
         x ^= x >> 27;
         x *= 0x94d049bb133111eb;
-        x ^= x >> 31;
-        // Xor accumulation would make the final xor-shift redundant.
-        sum += x;
+        // Xor accumulation makes the final xor-shift redundant.
+        sum ^= x;
     }
     return sum;
 }
