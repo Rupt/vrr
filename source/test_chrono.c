@@ -34,7 +34,7 @@ chacha(void)
 void
 checksum(void)
 {
-    uint8_t static const bytes[1234500] = {0};
+    uint8_t static const bytes[12345000] = {0};
     vrr_checksum(sizeof(bytes), bytes);
 }
 
