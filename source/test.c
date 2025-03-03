@@ -38,58 +38,13 @@ uint64_t vrr_checksum(uint64_t count, uint8_t const *const bytes) {
     for (; i + 8 <= count; i += 8, xi += 8 * increment) {
         sum += mix(xi + 8 * increment, u64(bytes + i));
     }
-    // TODO: only one extra with zero padding and incremented counter
     uint64_t remainder = count - i;
-    switch (remainder) {
-        case 1: {
-            sum += mix(xi + increment, bytes[i]);
-            break;
-        }
-        case 2: {
-            sum += mix(xi + 2 * increment,
-                       (uint64_t)bytes[i] | ((uint64_t)bytes[i + 1] << 8));
-            break;
-        }
-        case 3: {
-            sum += mix(xi + 3 * increment, (uint64_t)bytes[i] |
-                                               ((uint64_t)bytes[i + 1] << 8) |
-                                               ((uint64_t)bytes[i + 2] << 16));
-            break;
-        }
-        case 4: {
-            sum += mix(xi + 4 * increment, (uint64_t)bytes[i] |
-                                               ((uint64_t)bytes[i + 1] << 8) |
-                                               ((uint64_t)bytes[i + 2] << 16) |
-                                               ((uint64_t)bytes[i + 3] << 24));
-            break;
-        }
-        case 5: {
-            sum += mix(xi + 5 * increment, (uint64_t)bytes[i] |
-                                               ((uint64_t)bytes[i + 1] << 8) |
-                                               ((uint64_t)bytes[i + 2] << 16) |
-                                               ((uint64_t)bytes[i + 3] << 24) |
-                                               ((uint64_t)bytes[i + 4] << 32));
-            break;
-        }
-        case 6: {
-            sum += mix(xi + 6 * increment, (uint64_t)bytes[i] |
-                                               ((uint64_t)bytes[i + 1] << 8) |
-                                               ((uint64_t)bytes[i + 2] << 16) |
-                                               ((uint64_t)bytes[i + 3] << 24) |
-                                               ((uint64_t)bytes[i + 4] << 32) |
-                                               ((uint64_t)bytes[i + 5] << 40));
-            break;
-        }
-        case 7: {
-            sum += mix(xi + 7 * increment, (uint64_t)bytes[i] |
-                                               ((uint64_t)bytes[i + 1] << 8) |
-                                               ((uint64_t)bytes[i + 2] << 16) |
-                                               ((uint64_t)bytes[i + 3] << 24) |
-                                               ((uint64_t)bytes[i + 4] << 32) |
-                                               ((uint64_t)bytes[i + 5] << 40) |
-                                               ((uint64_t)bytes[i + 6] << 48));
-            break;
-        }
+    uint64_t item = 0;
+    for (uint64_t j = 0; j < remainder; ++j) {
+        xi += increment;
+        item <<= 8;
+        item |= bytes[i + remainder - 1 - j];
     }
+    sum += mix(xi, item);
     return sum;
 }
