@@ -8,7 +8,7 @@
 uint64_t
 vrr_checksum(unsigned long long const count, uint8_t const *const bytes)
 {
-    uint64_t const c0 = 0x3779b97f4a7c1500;
+    uint64_t const c0 = 0x9e3779b97f4a7d00;
     // Tabulation hashing with implicit tables from SplitMix64
     uint64_t sum = 0;
     // Mixing with a counter encodes each byte position.
