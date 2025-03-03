@@ -6,7 +6,7 @@
 #endif
 
 uint64_t
-vrr_checksum(unsigned long long const count, uint8_t const *const bytes)
+vrr_checksum(uint64_t count, uint8_t const *const bytes)
 {
     // Tabulation hashing with implicit tables from David Stafford's Mix01
     //  http://zimbry.blogspot.com/2011/09/better-bit-mixing-improving-on.html
