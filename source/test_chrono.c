@@ -29,13 +29,12 @@ chacha(void)
     struct vrr_chacha_nonce const nonce = {{0}};
     uint8_t stream[12345];
     vrr_chacha_stream(key, nonce, sizeof(stream), stream);
-    (void)stream;  // unused
 }
 
 void
 checksum(void)
 {
-    uint8_t static const bytes[12345] = {0};
+    uint8_t static const bytes[1234500] = {0};
     vrr_checksum(sizeof(bytes), bytes);
 }
 
