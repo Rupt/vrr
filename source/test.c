@@ -24,14 +24,28 @@ mix(uint64_t a, uint64_t b)
     return a;
 }
 
+static inline uint64_t
+u64(uint8_t const *const bytes)
+{
+    return ((uint64_t)bytes[0] | ((uint64_t)bytes[1] << 8) |
+            ((uint64_t)bytes[2] << 16) | ((uint64_t)bytes[3] << 24) |
+            ((uint64_t)bytes[4] << 32) | ((uint64_t)bytes[5] << 40) |
+            ((uint64_t)bytes[6] << 48) | ((uint64_t)bytes[7] << 56));
+}
+
 uint64_t
 vrr_checksum(uint64_t count, uint8_t const *const bytes)
 {
     // Tabulation hashing with implicit tables
     uint64_t const increment = 0x9e3779b97f4a7c15;
     uint64_t sum = 0;
-    for (uint64_t i = 0, xi = 0; i < count; ++i, xi += increment) {
-        sum += mix(xi + increment, bytes[i]);
+    uint64_t i = 0;
+    uint64_t xi = 0;
+    for (; i + 8 <= count; i += 8, xi += 8 * increment) {
+        sum += mix(xi + 8 * increment, u64(bytes + i));
+    }
+    for (uint64_t j = 0; j < (count & 7); ++j, xi += increment) {
+        sum += mix(xi + increment, bytes[i + j]);
     }
     return sum;
 }
