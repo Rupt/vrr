@@ -10,6 +10,7 @@ mix(uint64_t a, uint64_t b)
 {
     // Constants taken from:
     //  http://zimbry.blogspot.com/2011/09/better-bit-mixing-improving-on.html
+    // TODO: try using xor in slightly different order to use ternary logic
     b += a;
     b ^= b >> 31;
     b *= 0x7fb5d329728ea185;
@@ -37,15 +38,17 @@ uint64_t
 vrr_checksum(uint64_t count, uint8_t const *const bytes)
 {
     // Tabulation hashing with implicit tables
-    uint64_t const increment = 0x9e3779b97f4a7c15;
+    uint64_t const c0 = 0x9e3779b97f4a7c15;
     uint64_t sum = 0;
-    uint64_t i = 0;
-    uint64_t xi = 0;
-    for (; i + 8 <= count; i += 8, xi += 8 * increment) {
-        sum += mix(xi + 8 * increment, u64(bytes + i));
+    for (uint64_t i = 0, xi = 0; i < count / 8; ++i, xi += 8 * c0) {
+        sum += mix(xi + 8 * c0, u64(bytes + 8 * i));
     }
-    for (uint64_t j = 0; j < (count & 7); ++j, xi += increment) {
-        sum += mix(xi + increment, bytes[i + j]);
+    if (count & 7) {
+        uint8_t pad[8] = {0};
+        for (uint64_t j = 0; j < (count & 7); ++j) {
+            pad[j] = bytes[count / 8 * 8 + j];
+        }
+        sum += mix(count * c0, u64(pad));
     }
     return sum;
 }

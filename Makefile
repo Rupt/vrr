@@ -1,4 +1,4 @@
-CFLAGS_LANGUAGE := -std=gnu99 -fwrapv -fno-strict-aliasing
+CFLAGS_LANGUAGE := -std=gnu99 -fwrapv -fno-strict-aliasing -fno-builtin-memcpy
 CFLAGS_STRICT := -pedantic -Werror -Wall -Wextra -Wconversion -Walloca -Wshadow -Wundef -Wwrite-strings -Wvla
 CFLAGS_COMPILE := -O2 -march=native -mprefer-vector-width=512
 CFLAGS := $(CFLAGS_LANGUAGE) $(CFLAGS_STRICT) $(CFLAGS_COMPILE)
