@@ -5,12 +5,15 @@
 #include "test.h"
 #endif
 
+// TODO: document
+// TODO: clarify names
+// TODO: empirically test this mixing function
+
 static inline uint64_t
 mix(uint64_t a, uint64_t b)
 {
     // Constants taken from:
     //  http://zimbry.blogspot.com/2011/09/better-bit-mixing-improving-on.html
-    // TODO: try using xor in slightly different order to use ternary logic
     b += a;
     b ^= b >> 31;
     b *= 0x7fb5d329728ea185;
@@ -43,6 +46,7 @@ vrr_checksum(uint64_t count, uint8_t const *const bytes)
     for (uint64_t i = 0, xi = 0; i < count / 8; ++i, xi += 8 * c0) {
         sum += mix(xi + 8 * c0, u64(bytes + 8 * i));
     }
+    // TODO: explain the need for padding
     if (count & 7) {
         uint8_t pad[8] = {0};
         for (uint64_t j = 0; j < (count & 7); ++j) {
